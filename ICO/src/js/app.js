@@ -3,6 +3,8 @@ App = {
     contracts: {},
     tokenInstance: null,
     tokenSaleInstance: null,
+    adminAccount: "0x85304c4a0be632214c4135a4f9112f18440b1ae6",
+    adminInitialTokens: 1000000,
     account: "0x0",
     accountBalance: 0,
     loading: false,
@@ -34,33 +36,55 @@ App = {
         $.getJSON("DappToken.json", dappToken => {
             App.contracts.DappToken = TruffleContract(dappToken);
             App.contracts.DappToken.setProvider(App.web3Provider);
-        }).done(() => {
-            $.getJSON("DappTokenSale.json", dappTokenSale => {
-                App.contracts.DappTokenSale = TruffleContract(dappTokenSale);
-                App.contracts.DappTokenSale.setProvider(App.web3Provider);
 
-                App.listenForEvents();
+            App.contracts.DappToken.deployed()
+                .then(instance => {
+                    console.log(`Dapp Token Address: ${instance.address}`);
+                    return instance;
+                })
+                .then(instance => {
+                    App.tokenInstance = instance;
 
-                return App.render();
-            });
+                    $.getJSON("DappTokenSale.json", dappTokenSale => {
+                        App.contracts.DappTokenSale = TruffleContract(dappTokenSale);
+                        App.contracts.DappTokenSale.setProvider(App.web3Provider);
+
+                        App.contracts.DappTokenSale.deployed().then(instance => {
+                            App.tokenSaleInstance = instance;
+                            console.log(`Dappp Token Sale Address: ${instance.address}`);
+
+                            App.checkBalances();
+                            App.listenForEvents();
+
+                            return App.render();
+                        });
+                    });
+                });
+        });
+    },
+
+    checkBalances: function() {
+        App.tokenInstance.balanceOf(App.adminAccount).then(adminBalance => {
+            // Check if Token Sale Contract has been provissioned with some tokens.
+            if (adminBalance.toNumber() === App.adminInitialTokens) {
+                throw new Error("Token Sale contract hasn't been provisioned! Please correct.");
+            }
         });
     },
 
     listenForEvents: function() {
-        App.contracts.DappTokenSale.deployed().then(instance => {
-            instance
-                .Sell(
-                    {},
-                    {
-                        fromBlock: 0,
-                        toBlock: "latest"
-                    }
-                )
-                .watch((error, event) => {
-                    console.log(`Event triggered: [${event.event}]`);
-                    App.render();
-                });
-        });
+        App.tokenSaleInstance
+            .Sell(
+                {},
+                {
+                    fromBlock: 0,
+                    toBlock: "latest"
+                }
+            )
+            .watch((error, event) => {
+                console.log(`Event triggered: [${event.event}]`);
+                App.render();
+            });
     },
 
     render: function() {
@@ -83,11 +107,8 @@ App = {
         });
 
         // Load token sale contract.
-        App.contracts.DappTokenSale.deployed()
-            .then(instance => {
-                App.tokenSaleInstance = instance;
-                return App.tokenSaleInstance.tokenPrice();
-            })
+        App.tokenSaleInstance
+            .tokenPrice()
             .then(price => {
                 App.tokenPrice = price.toNumber();
                 $(".token-price").html(web3.fromWei(App.tokenPrice, "ether"));
@@ -101,21 +122,16 @@ App = {
                 let progressPercent = (App.tokensSold / App.tokensAvailable) * 100;
                 $("#progress").css("width", progressPercent + "%");
 
-                // Load token contract.
-                App.contracts.DappToken.deployed()
-                    .then(instance => {
-                        App.tokenInstance = instance;
-                        return App.tokenInstance.balanceOf(App.account);
-                    })
-                    .then(accountBalance => {
-                        App.accountBalance = accountBalance.toNumber();
-                        $(".dapp-balance").html(App.accountBalance);
+                return App.tokenInstance.balanceOf(App.account);
+            })
+            .then(accountBalance => {
+                App.accountBalance = accountBalance.toNumber();
+                $(".dapp-balance").html(App.accountBalance);
 
-                        // Finished - show content now.
-                        App.loading = false;
-                        loader.hide();
-                        content.show();
-                    });
+                // Finished - show content now.
+                App.loading = false;
+                loader.hide();
+                content.show();
             });
     },
 
