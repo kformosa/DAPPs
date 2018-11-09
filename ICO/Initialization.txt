@@ -1,0 +1,18 @@
+Dapp Token ICO
+==============
+
+Make sure Ganache is running (unique new Network ID)
+Deploy contracts using: 
+	truffle migrate --reset
+	
+
+Provision 750000 tokens to the TokenSale contract 
+Open truffle console
+
+	DappTokenSale.deployed().then(i=>{tokenSale=i})
+	DappToken.deployed().then(i=>{token=i})
+	tokensAvailable=750000
+	admin=web3.eth.accounts[0]
+	token.transfer(tokenSale.address, tokensAvailable, {from: admin})
+	token.balanceOf(admin)
+	token.balanceOf(tokenSale.address)
