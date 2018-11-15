@@ -51,7 +51,7 @@ App = {
 
                         App.contracts.DappTokenSale.deployed().then(instance => {
                             App.tokenSaleInstance = instance;
-                            console.log(`Dappp Token Sale Address: ${instance.address}`);
+                            console.log(`Dapp Token Sale Address: ${instance.address}`);
 
                             // Note: use only for local network (accounts will change)!
                             /* App.checkBalances(); */

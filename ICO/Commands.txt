@@ -50,6 +50,9 @@ personal.unlockAccount(eth.accounts[0], null, 1200) - account, password, time in
 Problem when using "truffle console --network rinkeby":
 web3.eth.getAccounts((err,res) => {accounts=res}) <= when web3 provider doesn't support syncronous calls.
 
+let amount = web3.toWei(5,"ether")
+web3.eth.sendTransaction({from:sender, to:receiver, value:amount}, (err,hash)=>{out=hash})
+
 
 Using contracts on Rinkeby/Test/Main networks (using Geth)
 ==========================================================

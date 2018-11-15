@@ -43,7 +43,8 @@ module.exports = {
             // Rinkeby test network using infura.io
             host: "localhost",
             provider: function() {
-                return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/" + tokenKey);
+                // Default account 0, generate 2 accounts from mnemonic provided.
+                return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/" + tokenKey, 0, 2);
             },
             network_id: 4,
             gas: 700000,
