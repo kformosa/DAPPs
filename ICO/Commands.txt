@@ -1,0 +1,74 @@
+Commands
+========
+
+Truffle
+=======
+
+truffle migrate --reset
+truffle migrate --reset --compile-all --network private
+truffle console --network private
+
+Geth
+====
+
+geth version
+geth --rinkeby --rpc --rpcapi="personl,eth,network,web3,net"		<- port 8545 (Rinkeby Test Network)
+geth attach http://localhost:8545
+geth --rinkeby account new
+
+Check if still syncing:
+eth.syncing
+
+eth.accounts
+eth.getBalance
+eth.coinbase
+web3.fromWei(eth.getBalace(eth.coinbase), "ether")
+
+let abi = {}
+let address = "0x256567eba.....5654cf@
+let adder = eth.contract(abi).at(address)
+
+geth --datadir "%ETHEREUM%\private" init "%ETHEREUM%\genesis.json"  							<- Initializes a new private blockchain/node
+geth --datadir "%ETHEREUM%\private" --ipcpath="private.ipc" --rpc --networkid=1234 console 2>console.log
+geth attach <rpc> (attach to a node which probably doesn't have a console)
+geth attach ipc:\\.\pipe\private.ipc
+
+geth --datadir "%ETHEREUM%\node-1" init "%ETHEREUM%\genesis.json"  							<- Initializes a new node (based on the same genesis block)
+geth --datadir "%ETHEREUM%\node-1" --ipcpath="node-1.ipc" --rpc --networkid=1234 --port 30304 --nodiscover console  	<- start node 1 on same network id, different port.
+
+Added node-1 info in the "/private/static-nodes.json" for automatic peer addition on startup
+
+admin.nodeInfo
+admin.addPeer
+admin.peers
+personal.newAccount()
+eth.coinbase
+web3.fromWei(eth.getBalance(eth.coinbase), "ether")
+
+personal.unlockAccount(eth.accounts[0], null, 1200) - account, password, time in seconds (20 minutes)
+
+Problem when using "truffle console --network rinkeby":
+web3.eth.getAccounts((err,res) => {accounts=res}) <= when web3 provider doesn't support syncronous calls.
+
+
+Using contracts on Rinkeby/Test/Main networks (using Geth)
+==========================================================
+
+Get contract address and abi from the "build/contracts/<contract>.json"
+You can compress/minify abi 
+Set variables for abi and addresses in Geth
+
+let tokenContract = web3.eth.contract(abi)		<= web3 object
+let tokenInstance = tokenContract.at(tokenAddress)	<= grab contract instance
+
+Now you can call any functions on contract: tokenInstance.name()
+
+
+Rinkeby Testnet
+===============
+
+https://rinkeby.etherscan.io
+https://rinkeby.etherscan.io/balancecheck-tool
+https://faucet.rinkeby.io (request ether)
+
+https://infura.io (deploy to test network and MainNet)

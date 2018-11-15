@@ -3,7 +3,7 @@ App = {
     contracts: {},
     tokenInstance: null,
     tokenSaleInstance: null,
-    adminAccount: "0x85304c4a0be632214c4135a4f9112f18440b1ae6",
+    adminAccount: "0x85304c4a0be632214c4135a4f9112f18440b1ae6", // First account on my Ganache instance (local network).
     adminInitialTokens: 1000000,
     account: "0x0",
     accountBalance: 0,
@@ -53,7 +53,9 @@ App = {
                             App.tokenSaleInstance = instance;
                             console.log(`Dappp Token Sale Address: ${instance.address}`);
 
-                            App.checkBalances();
+                            // Note: use only for local network (accounts will change)!
+                            /* App.checkBalances(); */
+
                             App.listenForEvents();
 
                             return App.render();

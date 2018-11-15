@@ -16,3 +16,31 @@ Open truffle console
 	token.transfer(tokenSale.address, tokensAvailable, {from: admin})
 	token.balanceOf(admin)
 	token.balanceOf(tokenSale.address)
+
+
+Private Blockchain (Geth)
+=========================
+
+Initialized already on 14/11/2018
+
+Accounts:
+0	0xd2677f3df226389682f3f05b5fc0322855b4ae3c	<- Admin
+1	0x98497134b24570e8fc23e4934d9abc4f27bd2e96
+
+Deployed via Truffle
+Dapp Token: 	 0x623f383c3313483ef3efdbea5413a76a526c8d65
+Dapp Token Sale: 0x118e278a43af4b843646d6296bef02b4d0c0335c
+
+
+Rinkeby Test Network
+====================
+
+Initialized alreadt on 15/11/2018
+
+Accounts:
+0	0xd4dfcD1a718c880e32D64152615Cca85F1392aDc	<- Admin
+1	0x502EE2E104E9836dB0275578730EDEBE9768F096
+
+Deployed via Truffle
+Dapp Token:	 0x75979c6a3a6c811543a6d3637561f4a26f78845b
+Dapp Token Sale: 0xdfb54fc46c14e5100591b6aee6f502ecea4c22c1
